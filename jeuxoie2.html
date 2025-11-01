@@ -1,0 +1,2025 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu de l'Oie de la Prévention</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: hsl(210, 20%, 98%);
+            --text-primary: hsl(220, 15%, 20%);
+            --primary: hsl(180, 65%, 45%);
+            --secondary: hsl(340, 70%, 65%);
+            --accent: hsl(155, 60%, 55%);
+            --border: hsl(210, 15%, 85%);
+        }
+
+        body.dark-mode {
+            --bg-primary: hsl(220, 20%, 12%);
+            --text-primary: hsl(210, 15%, 95%);
+            --border: hsl(220, 15%, 25%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Fredoka', 'Inter', sans-serif;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 2000;
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+        }
+
+        /* Sound Toggle */
+        .sound-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 5rem;
+            z-index: 2000;
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .sound-toggle:hover {
+            transform: scale(1.05);
+        }
+
+        .sound-toggle.muted {
+            opacity: 0.5;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+       .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, hsl(180, 70%, 50%, 0.92), hsl(155, 65%, 50%, 0.92)),
+                        url('logo.png') center/cover;
+        }
+
+        .hero-gradient-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 8rem;
+            background: linear-gradient(to top, var(--bg-primary), transparent);
+            z-index: 10;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 5rem 1rem;
+            max-width: 1200px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            animation: fadeInUp 0.6s ease 0.2s backwards;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 3rem;
+            max-width: 48rem;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.6s ease 0.4s backwards;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.6s ease 0.6s backwards;
+        }
+
+        .btn {
+            padding: 1.5rem 2rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.16);
+        }
+
+        .btn-primary:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Section */
+        .section {
+            padding: 5rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, hsl(180, 65%, 40%), hsl(180, 70%, 55%));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        body.dark-mode .section-header h2 {
+            background: linear-gradient(135deg, hsl(180, 60%, 50%), hsl(180, 70%, 60%));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header p {
+            font-size: 1.125rem;
+            color: hsl(220, 10%, 50%);
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        body.dark-mode .card {
+            background: hsl(220, 18%, 16%);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.16);
+        }
+
+        .card-icon {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.75rem;
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            color: hsl(220, 10%, 50%);
+        }
+
+        /* Steps */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-number {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 16px -4px rgba(44, 182, 185, 0.25);
+        }
+
+        .step h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .step p {
+            color: hsl(220, 10%, 50%);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        body.dark-mode .modal {
+            background: hsl(220, 18%, 16%);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-header p {
+            color: hsl(220, 10%, 50%);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: hsl(220, 10%, 50%);
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: hsl(210, 15%, 90%);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .mode-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .mode-option {
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .mode-option:hover {
+            border-color: var(--primary);
+        }
+
+        .mode-option.selected {
+            border-color: var(--primary);
+            background: hsl(180, 65%, 45%, 0.05);
+        }
+
+        .mode-option .icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .mode-option .label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .mode-option .sublabel {
+            font-size: 0.75rem;
+            color: hsl(220, 10%, 50%);
+        }
+
+        .player-count {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+        }
+
+        .player-btn {
+            padding: 1rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border: 2px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .player-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .player-btn.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Player customization */
+        .player-customization {
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .player-custom-item {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border-radius: 0.5rem;
+        }
+
+        .player-custom-item input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .avatar-selector {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .avatar-option {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .avatar-option:hover {
+            transform: scale(1.1);
+        }
+
+        .avatar-option.selected {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .modal-footer .btn {
+            flex: 1;
+            padding: 1rem;
+        }
+
+        /* Game Board */
+        .game-header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.08);
+        }
+
+        body.dark-mode .game-header {
+            background: hsl(220, 18%, 16%);
+        }
+
+        .game-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .game-header h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, hsl(180, 65%, 40%), hsl(180, 70%, 55%));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .btn-back {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: hsl(210, 20%, 95%);
+        }
+
+        body.dark-mode .btn-back:hover {
+            background: hsl(220, 15%, 20%);
+        }
+
+        .game-stats {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: hsl(220, 10%, 50%);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .game-layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 1.5rem;
+            padding: 2rem 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .board-container {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        body.dark-mode .board-container {
+            background: hsl(220, 18%, 16%);
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 0.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .space {
+            aspect-ratio: 1;
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.75rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .space:hover {
+            border-color: hsl(180, 65%, 45%, 0.4);
+            transform: scale(1.05);
+        }
+
+        .space.start {
+            background: linear-gradient(135deg, var(--primary), hsl(180, 70%, 60%));
+            color: white;
+            box-shadow: 0 4px 16px -4px rgba(44, 182, 185, 0.25);
+        }
+
+        .space.finish {
+            background: linear-gradient(135deg, hsl(145, 70%, 50%), var(--accent));
+            color: white;
+            box-shadow: 0 4px 16px -4px rgba(76, 175, 80, 0.25);
+        }
+
+        .space.scenario {
+            background: linear-gradient(135deg, hsl(340, 70%, 65%, 0.2), hsl(155, 60%, 55%, 0.2));
+            border-color: hsl(340, 70%, 65%, 0.4);
+        }
+
+        .players-on-space {
+            display: flex;
+            gap: 0.125rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 0.25rem;
+        }
+
+        .player-token {
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            transition: all 0.3s;
+        }
+
+        .player-token.moving {
+            animation: tokenMove 0.5s ease;
+        }
+
+        @keyframes tokenMove {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .current-player {
+            background: white;
+            border: 2px solid;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        body.dark-mode .current-player {
+            background: hsl(220, 18%, 16%);
+        }
+
+        .player-avatar {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.12);
+        }
+
+        .player-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .player-position {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: hsl(210, 20%, 95%);
+            border-radius: 1rem;
+            font-size: 0.875rem;
+        }
+
+        body.dark-mode .player-position {
+            background: hsl(220, 15%, 20%);
+        }
+
+        .dice-container {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        body.dark-mode .dice-container {
+            background: hsl(220, 18%, 16%);
+        }
+
+        .dice-button {
+            width: 6rem;
+            height: 6rem;
+            border-radius: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 16px -4px rgba(44, 182, 185, 0.25);
+            margin-bottom: 1rem;
+        }
+
+        .dice-button:hover:not(:disabled) {
+            transform: scale(1.05);
+        }
+
+        .dice-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .dice-button.rolling {
+            animation: diceRoll 0.1s infinite;
+        }
+
+        @keyframes diceRoll {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(90deg); }
+            50% { transform: rotate(180deg); }
+            75% { transform: rotate(270deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .dice-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .dice-text {
+            font-size: 0.875rem;
+            color: hsl(220, 10%, 50%);
+        }
+
+        .players-list {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        body.dark-mode .players-list {
+            background: hsl(220, 18%, 16%);
+        }
+
+        .players-list h3 {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .player-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .player-item.active {
+            border-color: var(--primary);
+            background: hsl(180, 65%, 45%, 0.05);
+        }
+
+        .player-item-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .player-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .player-item-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .player-item-position {
+            display: inline-block;
+            padding: 0.125rem 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        /* History Panel */
+        .history-panel {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 1rem;
+            padding: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        body.dark-mode .history-panel {
+            background: hsl(220, 18%, 16%);
+        }
+
+        .history-panel h3 {
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .history-item {
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: var(--bg-primary);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: start;
+            gap: 0.5rem;
+        }
+
+        .history-icon {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+
+        .scenario-modal .modal {
+            max-width: 500px;
+        }
+
+        .scenario-icon {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+        }
+
+        .scenario-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .scenario-text {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .scenario-effect {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .scenario-effect-icon {
+            font-size: 1.5rem;
+        }
+
+        .scenario-effect-text {
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+
+        .footer {
+            background: hsl(210, 20%, 95%);
+            border-top: 1px solid var(--border);
+            padding: 2rem 1rem;
+            text-align: center;
+            color: hsl(220, 10%, 50%);
+        }
+
+        body.dark-mode .footer {
+            background: hsl(220, 18%, 16%);
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            position: absolute;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Tutorial */
+        .tutorial-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .tutorial-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        body.dark-mode .tutorial-content {
+            background: hsl(220, 18%, 16%);
+        }
+
+        .tutorial-content h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .tutorial-content p {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            color: hsl(220, 10%, 50%);
+        }
+
+        .tutorial-steps {
+            text-align: left;
+            margin: 1.5rem 0;
+        }
+
+        .tutorial-step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: 0.5rem;
+        }
+
+        .tutorial-step-number {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.125rem;
+            }
+
+            .game-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .board {
+                grid-template-columns: repeat(6, 1fr);
+            }
+
+            .theme-toggle {
+                top: auto;
+                bottom: 1rem;
+            }
+
+            .sound-toggle {
+                top: auto;
+                bottom: 1rem;
+                right: auto;
+                left: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <button class="theme-toggle" onclick="toggleTheme()" title="Changer le thème">
+        <span id="themeIcon">🌙</span>
+    </button>
+
+    
+    <button class="sound-toggle" onclick="toggleSound()" title="Activer/Désactiver les sons">
+        <span id="soundIcon">🔊</span>
+    </button>
+
+    
+    <div id="homePage">
+        
+        <section class="hero">
+            <div class="hero-bg"></div>
+            <div class="hero-content">
+                <span class="badge">Formation EVARS 1CIEL</span>
+                <h1>Jeu de l'Oie de la<br>Prévention</h1>
+                <p>Un jeu éducatif interactif pour aborder la santé sexuelle de manière ludique et positive. Jouez en ligne ou en local sur tablette.</p>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="openSetupModal()">Commencer à jouer</button>
+                    <button class="btn btn-outline" onclick="scrollToFeatures()">En savoir plus</button>
+                </div>
+            </div>
+            <div class="hero-gradient-bottom"></div>
+        </section>
+
+        
+        <section id="features" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Pourquoi ce jeu ?</h2>
+                    <p>Un outil pédagogique moderne pour l'éducation à la santé sexuelle</p>
+                </div>
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-icon" style="background-color: hsl(180, 65%, 45%, 0.2);">
+                            <span style="color: hsl(180, 65%, 45%);">👥</span>
+                        </div>
+                        <h3>Mode multijoueur</h3>
+                        <p>Jouez en ligne avec vos élèves ou amis en temps réel</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon" style="background-color: hsl(340, 70%, 65%, 0.2);">
+                            <span style="color: hsl(340, 70%, 65%);">📱</span>
+                        </div>
+                        <h3>Mode local</h3>
+                        <p>Jouez sur une seule tablette, parfait pour la classe</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon" style="background-color: hsl(155, 60%, 55%, 0.2);">
+                            <span style="color: hsl(155, 60%, 55%);">🏆</span>
+                        </div>
+                        <h3>Apprentissage ludique</h3>
+                        <p>Apprenez en vous amusant avec des scénarios réels</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon" style="background-color: hsl(0, 70%, 60%, 0.2);">
+                            <span style="color: hsl(0, 70%, 60%);">❤️</span>
+                        </div>
+                        <h3>Santé sexuelle</h3>
+                        <p>Abordez les sujets importants de manière positive</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon" style="background-color: hsl(145, 70%, 50%, 0.2);">
+                            <span style="color: hsl(145, 70%, 50%);">🛡️</span>
+                        </div>
+                        <h3>Prévention</h3>
+                        <p>Développez les bons réflexes de protection</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon" style="background-color: hsl(35, 90%, 55%, 0.2);">
+                            <span style="color: hsl(35, 90%, 55%);">💬</span>
+                        </div>
+                        <h3>Dialogue ouvert</h3>
+                        <p>Encouragez la communication et les questions</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <section class="section" style="background: hsl(210, 20%, 95%, 0.3);">
+            <div class="container">
+                <div class="section-header">
+                    <h2 style="background: none; -webkit-text-fill-color: inherit; color: var(--text-primary);">Comment ça marche ?</h2>
+                    <p>Trois étapes simples pour commencer</p>
+                </div>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">01</div>
+                        <h3>Configurez la partie</h3>
+                        <p>Choisissez le nombre de joueurs et personnalisez-les</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">02</div>
+                        <h3>Lancez le dé</h3>
+                        <p>À tour de rôle, lancez le dé et avancez sur le plateau</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">03</div>
+                        <h3>Apprenez en jouant</h3>
+                        <p>Répondez aux questions et vivez des scénarios de prévention</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <section class="section">
+            <div class="container">
+                <div class="card" style="max-width: 800px; margin: 0 auto; text-align: center; padding: 3rem;">
+                    <div style="width: 5rem; height: 5rem; border-radius: 50%; background: linear-gradient(135deg, hsl(180, 65%, 45%), hsl(155, 60%, 55%)); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; font-size: 2.5rem;">🏆</div>
+                    <h2 style="font-size: 2rem; margin-bottom: 1rem;">Prêt à commencer l'aventure ?</h2>
+                    <p style="font-size: 1.125rem; color: hsl(220, 10%, 50%); margin-bottom: 2rem;">Rejoignez des milliers d'élèves qui apprennent la prévention de manière ludique et interactive.</p>
+                    <button class="btn btn-primary" onclick="openSetupModal()">Lancer une partie</button>
+                </div>
+            </div>
+        </section>
+
+        
+        <footer class="footer">
+            <p>Jeu de l'Oie de la Prévention - Outil éducatif pour la santé sexuelle • Version 2.0</p>
+        </footer>
+    </div>
+
+    
+    <div id="gamePage" class="hidden">
+        <header class="game-header">
+            <div class="container">
+                <button class="btn-back" onclick="confirmGoHome()">← Retour</button>
+                <h1>Jeu de l'Oie de la Prévention</h1>
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <span>🎲</span>
+                        <span id="turnCount">Tour 1</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="game-layout">
+            <div class="board-container">
+                <div class="board" id="gameBoard"></div>
+            </div>
+
+            <div class="sidebar">
+                <div class="current-player" id="currentPlayerCard">
+                    <h3>Tour de</h3>
+                    <div class="player-avatar" id="currentPlayerAvatar"></div>
+                    <div class="player-name" id="currentPlayerName"></div>
+                    <span class="player-position" id="currentPlayerPosition"></span>
+                </div>
+
+                <div class="dice-container">
+                    <button class="dice-button" id="diceButton" onclick="rollDice()">🎲</button>
+                    <div class="dice-value" id="diceValue"></div>
+                    <div class="dice-text" id="diceText">Cliquez pour lancer</div>
+                </div>
+
+                <div class="players-list">
+                    <h3>Joueurs</h3>
+                    <div id="playersList"></div>
+                </div>
+
+                <div class="history-panel">
+                    <h3>📜 Historique</h3>
+                    <div id="historyList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="setupModal" class="modal-overlay hidden">
+        <div class="modal">
+            <button class="modal-close" onclick="closeSetupModal()">✕</button>
+            <div class="modal-header">
+                <h2>Configuration de la partie</h2>
+                <p>Choisissez vos paramètres de jeu</p>
+            </div>
+
+            <div class="form-group">
+                <label>Mode de jeu</label>
+                <div class="mode-grid">
+                    <div class="mode-option selected" onclick="selectMode('local')">
+                        <div class="icon">📱</div>
+                        <span class="label">Local</span>
+                        <span class="sublabel">Une tablette</span>
+                    </div>
+                    <div class="mode-option" onclick="selectMode('online')" style="opacity: 0.6; cursor: not-allowed;">
+                        <div class="icon">👥</div>
+                        <span class="label">En ligne</span>
+                        <span class="sublabel">Bientôt disponible</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Nombre de joueurs</label>
+                <div class="player-count">
+                    <button class="player-btn selected" onclick="selectPlayerCount(2)">2</button>
+                    <button class="player-btn" onclick="selectPlayerCount(3)">3</button>
+                    <button class="player-btn" onclick="selectPlayerCount(4)">4</button>
+                    <button class="player-btn" onclick="selectPlayerCount(5)">5</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Personnalisation des joueurs</label>
+                <div class="player-customization" id="playerCustomization"></div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn" style="background: white; border: 2px solid var(--border); color: var(--text-primary);" onclick="closeSetupModal()">Annuler</button>
+                <button class="btn btn-primary" onclick="startGame()">Commencer</button>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="scenarioModal" class="modal-overlay scenario-modal hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="scenario-icon" id="scenarioIcon"></div>
+                <h2 id="scenarioPlayerName"></h2>
+                <span class="scenario-badge" id="scenarioBadge"></span>
+            </div>
+
+            <p class="scenario-text" id="scenarioText"></p>
+
+            <div class="scenario-effect" id="scenarioEffect">
+                <span class="scenario-effect-icon" id="scenarioEffectIcon"></span>
+                <span class="scenario-effect-text" id="scenarioEffectText"></span>
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%;" onclick="closeScenarioModal()">Continuer</button>
+        </div>
+    </div>
+
+    
+    <div id="tutorialModal" class="modal-overlay tutorial-overlay hidden">
+        <div class="tutorial-content">
+            <h2>👋 Bienvenue !</h2>
+            <p>Découvrez comment jouer au Jeu de l'Oie de la Prévention</p>
+            
+            <div class="tutorial-steps">
+                <div class="tutorial-step">
+                    <div class="tutorial-step-number">1</div>
+                    <div>
+                        <strong>Configurez votre partie</strong>
+                        <p style="margin: 0; font-size: 0.875rem; color: hsl(220, 10%, 50%);">Choisissez le nombre de joueurs et personnalisez leurs noms et avatars</p>
+                    </div>
+                </div>
+                <div class="tutorial-step">
+                    <div class="tutorial-step-number">2</div>
+                    <div>
+                        <strong>Lancez le dé</strong>
+                        <p style="margin: 0; font-size: 0.875rem; color: hsl(220, 10%, 50%);">Cliquez sur le dé pour avancer sur le plateau</p>
+                    </div>
+                </div>
+                <div class="tutorial-step">
+                    <div class="tutorial-step-number">3</div>
+                    <div>
+                        <strong>Découvrez les scénarios</strong>
+                        <p style="margin: 0; font-size: 0.875rem; color: hsl(220, 10%, 50%);">Les cases colorées contiennent des situations éducatives qui vous font avancer ou reculer</p>
+                    </div>
+                </div>
+                <div class="tutorial-step">
+                    <div class="tutorial-step-number">4</div>
+                    <div>
+                        <strong>Gagnez la partie</strong>
+                        <p style="margin: 0; font-size: 0.875rem; color: hsl(220, 10%, 50%);">Le premier joueur à atteindre la case "Arrivée" remporte la partie !</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="closeTutorial()">J'ai compris !</button>
+            <p style="font-size: 0.875rem; margin-top: 1rem; color: hsl(220, 10%, 50%);">
+                <label><input type="checkbox" id="dontShowAgain"> Ne plus afficher ce message</label>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        
+        let gameState = {
+            mode: 'local',
+            playerCount: 2,
+            players: [],
+            currentPlayerIndex: 0,
+            diceValue: null,
+            isRolling: false,
+            currentScenario: null,
+            turnCount: 0,
+            history: [],
+            soundEnabled: true
+        };
+
+        
+        const avatars = ['😊', '🎓', '🌟', '🎨', '🚀', '🎭', '🎪', '🎯', '🎸', '⚡', '🌈', '🔥'];
+
+        
+        const playerColors = [
+            'hsl(180, 65%, 45%)',
+            'hsl(340, 70%, 65%)',
+            'hsl(155, 60%, 55%)',
+            'hsl(35, 90%, 55%)',
+            'hsl(280, 65%, 60%)'
+        ];
+
+        
+        const scenarios = [
+            { position: 3, text: "Tu oublies d'utiliser un préservatif lors d'un rapport. C'est un comportement à risque important pour les IST.", type: 'negative', effect: { action: 'backward', value: -3 } },
+            { position: 6, text: "Tu décides de faire un dépistage des IST. C'est une démarche responsable et importante pour ta santé !", type: 'positive', effect: { action: 'forward', value: 2 } },
+            { position: 9, text: "Tu communiques clairement tes limites et ton consentement à ton/ta partenaire. Excellent réflexe !", type: 'positive', effect: { action: 'again', value: 0 } },
+            { position: 12, text: "Tu cherches des informations sur la santé sexuelle sur un site fiable comme celui de Santé Publique France.", type: 'positive', effect: { action: 'forward', value: 1 } },
+            { position: 15, text: "Tu ignores des symptômes inquiétants au lieu de consulter un médecin. Il est important de ne pas attendre.", type: 'negative', effect: { action: 'skip', value: 0 } },
+            { position: 18, text: "Tu parles ouvertement de contraception avec ton/ta partenaire. La communication est essentielle !", type: 'positive', effect: { action: 'forward', value: 2 } },
+            { position: 21, text: "Tu cèdes à la pression de ton groupe d'amis concernant ta vie intime. Respecte toujours tes propres choix.", type: 'negative', effect: { action: 'backward', value: -2 } },
+            { position: 24, text: "Tu découvres l'existence de la PrEP (prophylaxie pré-exposition) pour la prévention du VIH. Bonne information !", type: 'neutral', effect: { action: 'forward', value: 1 } },
+            { position: 27, text: "Tu refuses un rapport sexuel car tu ne te sens pas prêt(e). Respecter son propre rythme est fondamental.", type: 'positive', effect: { action: 'forward', value: 3 } },
+            { position: 30, text: "Tu te renseignes sur les différentes méthodes de contraception disponibles. C'est important de connaître ses options.", type: 'positive', effect: { action: 'forward', value: 2 } },
+            { position: 33, text: "Tu partages des informations intimes sur les réseaux sociaux. Attention à protéger ta vie privée.", type: 'negative', effect: { action: 'backward', value: -2 } },
+            { position: 36, text: "Tu accompagnes un(e) ami(e) à un rendez-vous de dépistage. Le soutien entre pairs est précieux !", type: 'positive', effect: { action: 'forward', value: 2 } },
+            { position: 39, text: "Tu te rends à un rendez-vous chez un professionnel de santé pour parler de contraception. Démarche exemplaire !", type: 'positive', effect: { action: 'forward', value: 1 } },
+            { position: 5, text: "Tu poses des questions sur le consentement lors d'un cours d'éducation sexuelle. Bravo pour ta curiosité !", type: 'positive', effect: { action: 'forward', value: 1 } },
+            { position: 8, text: "Tu ne respectes pas le consentement de ton/ta partenaire. Le consentement est TOUJOURS obligatoire.", type: 'negative', effect: { action: 'backward', value: -4 } },
+            { position: 11, text: "Tu découvres les différents moyens de contraception d'urgence. Information utile en cas de besoin !", type: 'neutral', effect: { action: 'forward', value: 1 } },
+            { position: 14, text: "Tu te vaccines contre le papillomavirus (HPV). Un geste de prévention important !", type: 'positive', effect: { action: 'forward', value: 2 } },
+            { position: 17, text: "Tu consultes immédiatement après un rapport à risque. Rapidité d'action = meilleure prévention !", type: 'positive', effect: { action: 'again', value: 0 } },
+            { position: 20, text: "Tu as peur du jugement et tu ne consultes pas. N'hésite jamais à parler à un professionnel de santé.", type: 'negative', effect: { action: 'backward', value: -1 } },
+            { position: 23, text: "Tu participes à un atelier sur les relations saines. Excellente initiative pour ton développement !", type: 'positive', effect: { action: 'forward', value: 2 } },
+            { position: 26, text: "Tu apprends à reconnaître les signes d'une relation toxique. Cette connaissance peut t'aider et aider les autres.", type: 'positive', effect: { action: 'forward', value: 1 } },
+            { position: 29, text: "Tu partages des ressources fiables sur la santé sexuelle avec tes amis. Diffuser la bonne information, c'est important !", type: 'positive', effect: { action: 'forward', value: 2 } },
+            { position: 32, text: "Tu te renseignes sur les services de santé sexuelle gratuits et confidentiels pour les jeunes.", type: 'positive', effect: { action: 'forward', value: 1 } },
+            { position: 35, text: "Tu encourages un(e) ami(e) à parler de ses préoccupations avec un adulte de confiance. Bon soutien !", type: 'positive', effect: { action: 'forward', value: 1 } }
+        ];
+
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSettings();
+            checkFirstVisit();
+        });
+
+        
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const icon = document.getElementById('themeIcon');
+            icon.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+            playSound('click');
+        }
+
+        
+        function toggleSound() {
+            gameState.soundEnabled = !gameState.soundEnabled;
+            const icon = document.getElementById('soundIcon');
+            const button = document.querySelector('.sound-toggle');
+            icon.textContent = gameState.soundEnabled ? '🔊' : '🔇';
+            button.classList.toggle('muted', !gameState.soundEnabled);
+            localStorage.setItem('sound', gameState.soundEnabled);
+            if (gameState.soundEnabled) playSound('click');
+        }
+
+        
+        function loadSettings() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('themeIcon').textContent = '☀️';
+            }
+            
+            const sound = localStorage.getItem('sound');
+            if (sound === 'false') {
+                gameState.soundEnabled = false;
+                document.getElementById('soundIcon').textContent = '🔇';
+                document.querySelector('.sound-toggle').classList.add('muted');
+            }
+        }
+
+        
+        function checkFirstVisit() {
+            const hasVisited = localStorage.getItem('hasVisited');
+            const dontShow = localStorage.getItem('dontShowTutorial');
+            if (!hasVisited && !dontShow) {
+                
+                localStorage.setItem('hasVisited', 'true');
+            }
+        }
+
+        
+        function showTutorial() {
+            document.getElementById('tutorialModal').classList.remove('hidden');
+        }
+
+        function closeTutorial() {
+            const dontShow = document.getElementById('dontShowAgain').checked;
+            if (dontShow) {
+                localStorage.setItem('dontShowTutorial', 'true');
+            }
+            document.getElementById('tutorialModal').classList.add('hidden');
+            playSound('click');
+        }
+
+        
+        function playSound(type) {
+            if (!gameState.soundEnabled) return;
+            
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            switch(type) {
+                case 'dice':
+                    oscillator.frequency.value = 400;
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.1);
+                    break;
+                case 'move':
+                    oscillator.frequency.value = 600;
+                    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.15);
+                    break;
+                case 'positive':
+                    oscillator.frequency.value = 800;
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.3);
+                    break;
+                case 'negative':
+                    oscillator.frequency.value = 200;
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.3);
+                    break;
+                case 'click':
+                    oscillator.frequency.value = 500;
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.05);
+                    break;
+            }
+        }
+
+        
+        function createConfetti() {
+            const colors = ['hsl(180, 65%, 45%)', 'hsl(340, 70%, 65%)', 'hsl(155, 60%, 55%)', 'hsl(35, 90%, 55%)'];
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
+        }
+
+        
+        function createBoard() {
+            const board = document.getElementById('gameBoard');
+            board.innerHTML = '';
+            
+            for (let i = 0; i <= 40; i++) {
+                const space = document.createElement('div');
+                const isScenario = scenarios.some(s => s.position === i);
+                
+                space.className = 'space';
+                if (i === 0) space.classList.add('start');
+                else if (i === 40) space.classList.add('finish');
+                else if (isScenario) space.classList.add('scenario');
+                
+                space.innerHTML = `
+                    <span>${i === 0 ? 'Départ' : i === 40 ? 'Arrivée' : i}</span>
+                    <div class="players-on-space" id="space-${i}"></div>
+                `;
+                
+                board.appendChild(space);
+            }
+        }
+
+        
+        function openSetupModal() {
+            document.getElementById('setupModal').classList.remove('hidden');
+            updatePlayerCustomization();
+            playSound('click');
+        }
+
+        function closeSetupModal() {
+            document.getElementById('setupModal').classList.add('hidden');
+            playSound('click');
+        }
+
+        function selectMode(mode) {
+            if (mode === 'online') return;
+            gameState.mode = mode;
+            document.querySelectorAll('.mode-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            event.target.closest('.mode-option').classList.add('selected');
+            playSound('click');
+        }
+
+        function selectPlayerCount(count) {
+            gameState.playerCount = count;
+            document.querySelectorAll('.player-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            updatePlayerCustomization();
+            playSound('click');
+        }
+
+        function updatePlayerCustomization() {
+            const container = document.getElementById('playerCustomization');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < gameState.playerCount; i++) {
+                const playerDiv = document.createElement('div');
+                playerDiv.className = 'player-custom-item';
+                playerDiv.style.borderLeft = `4px solid ${playerColors[i]}`;
+                
+                const defaultAvatar = avatars[i % avatars.length];
+                
+                playerDiv.innerHTML = `
+                    <input type="text" 
+                           value="Joueur ${i + 1}" 
+                           id="playerName${i}" 
+                           placeholder="Nom du joueur"
+                           maxlength="20">
+                    <div class="avatar-selector" id="avatarSelector${i}">
+                        ${avatars.map((avatar, idx) => `
+                            <div class="avatar-option ${idx === i % avatars.length ? 'selected' : ''}" 
+                                 onclick="selectAvatar(${i}, '${avatar}', this)">
+                                ${avatar}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                container.appendChild(playerDiv);
+            }
+        }
+
+        function selectAvatar(playerIndex, avatar, element) {
+            const selector = document.getElementById(`avatarSelector${playerIndex}`);
+            selector.querySelectorAll('.avatar-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            playSound('click');
+        }
+
+        function scrollToFeatures() {
+            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function confirmGoHome() {
+            if (confirm('Êtes-vous sûr de vouloir quitter la partie en cours ?')) {
+                goHome();
+            }
+        }
+
+        function goHome() {
+            document.getElementById('gamePage').classList.add('hidden');
+            document.getElementById('homePage').classList.remove('hidden');
+            saveGame(null); // Clear saved game
+            playSound('click');
+        }
+
+        // Start game
+        function startGame() {
+            closeSetupModal();
+            
+            // Initialize players with custom names and avatars
+            gameState.players = [];
+            for (let i = 0; i < gameState.playerCount; i++) {
+                const nameInput = document.getElementById(`playerName${i}`);
+                const selectedAvatar = document.querySelector(`#avatarSelector${i} .avatar-option.selected`);
+                
+                gameState.players.push({
+                    id: i + 1,
+                    name: nameInput ? nameInput.value : `Joueur ${i + 1}`,
+                    avatar: selectedAvatar ? selectedAvatar.textContent : avatars[i % avatars.length],
+                    position: 0,
+                    color: playerColors[i]
+                });
+            }
+            
+            gameState.currentPlayerIndex = 0;
+            gameState.diceValue = null;
+            gameState.turnCount = 0;
+            gameState.history = [];
+            
+            // Show game page
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('gamePage').classList.remove('hidden');
+            
+            // Create board
+            createBoard();
+            updateUI();
+            addHistory('🎮 La partie commence !', 'hsl(180, 65%, 45%)');
+            saveGame();
+            playSound('positive');
+        }
+
+        // Add to history
+        function addHistory(text, color = 'hsl(220, 10%, 50%)') {
+            gameState.history.unshift({ text, color, time: new Date() });
+            if (gameState.history.length > 10) gameState.history.pop();
+            
+            const historyList = document.getElementById('historyList');
+            if (historyList) {
+                historyList.innerHTML = gameState.history.map(item => `
+                    <div class="history-item">
+                        <div class="history-icon" style="background-color: ${item.color}20; color: ${item.color}">
+                            ${item.text.charAt(0)}
+                        </div>
+                        <div>${item.text}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Update UI
+        function updateUI() {
+            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            
+            // Update current player card
+            document.getElementById('currentPlayerCard').style.borderColor = currentPlayer.color;
+            document.getElementById('currentPlayerAvatar').style.backgroundColor = currentPlayer.color;
+            document.getElementById('currentPlayerAvatar').textContent = currentPlayer.avatar;
+            document.getElementById('currentPlayerName').textContent = currentPlayer.name;
+            document.getElementById('currentPlayerPosition').textContent = `Case ${currentPlayer.position}`;
+            
+            // Update turn count
+            document.getElementById('turnCount').textContent = `Tour ${gameState.turnCount}`;
+            
+            // Update players list
+            const playersList = document.getElementById('playersList');
+            playersList.innerHTML = '';
+            gameState.players.forEach((player, index) => {
+                const isActive = index === gameState.currentPlayerIndex;
+                const playerItem = document.createElement('div');
+                playerItem.className = `player-item ${isActive ? 'active' : ''}`;
+                playerItem.innerHTML = `
+                    <div class="player-item-avatar" style="background-color: ${player.color}">
+                        ${player.avatar}
+                    </div>
+                    <div class="player-item-info">
+                        <div class="player-item-name">${player.name}</div>
+                        <span class="player-item-position">Case ${player.position}</span>
+                    </div>
+                `;
+                playersList.appendChild(playerItem);
+            });
+            
+            // Update player tokens on board
+            for (let i = 0; i <= 40; i++) {
+                const spaceEl = document.getElementById(`space-${i}`);
+                if (spaceEl) {
+                    spaceEl.innerHTML = '';
+                    const playersHere = gameState.players.filter(p => p.position === i);
+                    playersHere.forEach(player => {
+                        const token = document.createElement('div');
+                        token.className = 'player-token';
+                        token.style.backgroundColor = player.color;
+                        token.textContent = player.avatar;
+                        token.title = player.name;
+                        spaceEl.appendChild(token);
+                    });
+                }
+            }
+            
+            // Update dice
+            if (gameState.diceValue) {
+                document.getElementById('diceValue').textContent = gameState.diceValue;
+            } else {
+                document.getElementById('diceValue').textContent = '';
+            }
+            
+            saveGame();
+        }
+
+        // Roll dice
+        function rollDice() {
+            if (gameState.isRolling) return;
+            
+            gameState.isRolling = true;
+            const button = document.getElementById('diceButton');
+            button.disabled = true;
+            button.classList.add('rolling');
+            document.getElementById('diceText').textContent = 'Lancement...';
+            
+            playSound('dice');
+            
+            let rolls = 0;
+            const rollInterval = setInterval(() => {
+                const tempValue = Math.floor(Math.random() * 6) + 1;
+                document.getElementById('diceValue').textContent = tempValue;
+                rolls++;
+                
+                if (rolls >= 15) {
+                    clearInterval(rollInterval);
+                    const finalValue = Math.floor(Math.random() * 6) + 1;
+                    gameState.diceValue = finalValue;
+                    document.getElementById('diceValue').textContent = finalValue;
+                    button.classList.remove('rolling');
+                    
+                    const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+                    addHistory(`🎲 ${currentPlayer.name} a lancé un ${finalValue}`, currentPlayer.color);
+                    
+                    setTimeout(() => {
+                        movePlayer(finalValue);
+                        gameState.isRolling = false;
+                        document.getElementById('diceText').textContent = 'Cliquez pour lancer';
+                    }, 300);
+                }
+            }, 100);
+        }
+
+        // Move player with animation
+        function movePlayer(steps) {
+            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            const oldPosition = currentPlayer.position;
+            const newPosition = Math.min(currentPlayer.position + steps, 40);
+            
+            // Animate movement
+            let currentPos = oldPosition;
+            const moveInterval = setInterval(() => {
+                if (currentPos < newPosition) {
+                    currentPos++;
+                    currentPlayer.position = currentPos;
+                    updateUI();
+                    playSound('move');
+                    
+                    // Add moving class
+                    const spaceEl = document.getElementById(`space-${currentPos}`);
+                    if (spaceEl) {
+                        const tokens = spaceEl.querySelectorAll('.player-token');
+                        tokens.forEach(token => {
+                            if (token.textContent === currentPlayer.avatar) {
+                                token.classList.add('moving');
+                                setTimeout(() => token.classList.remove('moving'), 500);
+                            }
+                        });
+                    }
+                } else {
+                    clearInterval(moveInterval);
+                    
+                    addHistory(`↗️ ${currentPlayer.name} avance à la case ${newPosition}`, currentPlayer.color);
+                    
+                    // Check for scenario
+                    const scenario = scenarios.find(s => s.position === newPosition);
+                    if (scenario) {
+                        setTimeout(() => showScenario(scenario), 500);
+                    } else {
+                        setTimeout(nextPlayer, 1000);
+                    }
+                    
+                    // Check for win
+                    if (newPosition >= 40) {
+                        setTimeout(() => {
+                            playSound('positive');
+                            createConfetti();
+                            addHistory(`🏆 ${currentPlayer.name} a gagné la partie !`, currentPlayer.color);
+                            alert(`🎉 Félicitations ${currentPlayer.name} !\n\nTu as remporté la partie en ${gameState.turnCount} tours !`);
+                        }, 500);
+                    }
+                }
+            }, 300);
+        }
+
+        // Show scenario
+        function showScenario(scenario) {
+            gameState.currentScenario = scenario;
+            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            
+            const typeColors = {
+                positive: 'hsl(145, 70%, 50%)',
+                negative: 'hsl(0, 70%, 60%)',
+                neutral: 'hsl(35, 90%, 55%)'
+            };
+            
+            const typeLabels = {
+                positive: 'Bonne décision',
+                negative: 'Attention',
+                neutral: 'Information'
+            };
+            
+            const typeIcons = {
+                positive: '❤️',
+                negative: '⚠️',
+                neutral: '🛡️'
+            };
+            
+            const effectIcons = {
+                forward: '📈',
+                backward: '📉',
+                again: '🔄',
+                skip: '⛔'
+            };
+            
+            const effectTexts = {
+                forward: `Avance de ${scenario.effect.value} case${scenario.effect.value > 1 ? 's' : ''}`,
+                backward: `Recule de ${Math.abs(scenario.effect.value)} case${Math.abs(scenario.effect.value) > 1 ? 's' : ''}`,
+                again: 'Lance le dé à nouveau',
+                skip: 'Passe ton tour'
+            };
+            
+            const color = typeColors[scenario.type];
+            
+            document.getElementById('scenarioIcon').style.backgroundColor = `${color}20`;
+            document.getElementById('scenarioIcon').textContent = typeIcons[scenario.type];
+            document.getElementById('scenarioPlayerName').textContent = currentPlayer.name;
+            document.getElementById('scenarioBadge').style.backgroundColor = color;
+            document.getElementById('scenarioBadge').textContent = typeLabels[scenario.type];
+            document.getElementById('scenarioText').textContent = scenario.text;
+            document.getElementById('scenarioEffect').style.backgroundColor = `${color}10`;
+            document.getElementById('scenarioEffectIcon').textContent = effectIcons[scenario.effect.action];
+            document.getElementById('scenarioEffectIcon').style.color = color;
+            document.getElementById('scenarioEffectText').textContent = effectTexts[scenario.effect.action];
+            document.getElementById('scenarioEffectText').style.color = color;
+            
+            document.getElementById('scenarioModal').classList.remove('hidden');
+            
+            playSound(scenario.type === 'positive' ? 'positive' : 'negative');
+            
+            addHistory(`📋 ${currentPlayer.name}: ${typeLabels[scenario.type]}`, color);
+        }
+
+        // Close scenario modal
+        function closeScenarioModal() {
+            const scenario = gameState.currentScenario;
+            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            
+            if (scenario.effect.action === 'forward' || scenario.effect.action === 'backward') {
+                const oldPos = currentPlayer.position;
+                const newPosition = Math.max(0, Math.min(currentPlayer.position + scenario.effect.value, 40));
+                currentPlayer.position = newPosition;
+                
+                if (scenario.effect.value > 0) {
+                    addHistory(`↗️ ${currentPlayer.name} avance de ${scenario.effect.value} cases`, currentPlayer.color);
+                } else {
+                    addHistory(`↙️ ${currentPlayer.name} recule de ${Math.abs(scenario.effect.value)} cases`, currentPlayer.color);
+                }
+                
+                updateUI();
+            }
+            
+            document.getElementById('scenarioModal').classList.add('hidden');
+            gameState.currentScenario = null;
+            
+            playSound('click');
+            
+            if (scenario.effect.action !== 'again') {
+                setTimeout(nextPlayer, 500);
+            } else {
+                document.getElementById('diceButton').disabled = false;
+                addHistory(`🔄 ${currentPlayer.name} rejoue !`, currentPlayer.color);
+            }
+        }
+
+        // Next player
+        function nextPlayer() {
+            gameState.currentPlayerIndex = (gameState.currentPlayerIndex + 1) % gameState.players.length;
+            
+            if (gameState.currentPlayerIndex === 0) {
+                gameState.turnCount++;
+            }
+            
+            gameState.diceValue = null;
+            document.getElementById('diceValue').textContent = '';
+            document.getElementById('diceButton').disabled = false;
+            updateUI();
+        }
+
+        // Save/Load game
+        function saveGame() {
+            if (gameState.players.length > 0) {
+                localStorage.setItem('savedGame', JSON.stringify(gameState));
+            }
+        }
+
+        function loadGame() {
+            const saved = localStorage.getItem('savedGame');
+            if (saved) {
+                try {
+                    const loaded = JSON.parse(saved);
+                    if (loaded.players && loaded.players.length > 0) {
+                        return loaded;
+                    }
+                } catch (e) {
+                    console.error('Error loading game:', e);
+                }
+            }
+            return null;
+        }
+
+        // Check for saved game on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = loadGame();
+            if (saved && confirm('Une partie sauvegardée a été trouvée. Voulez-vous la reprendre ?')) {
+                gameState = saved;
+                document.getElementById('homePage').classList.add('hidden');
+                document.getElementById('gamePage').classList.remove('hidden');
+                createBoard();
+                updateUI();
+            }
+        });
+    </script>
+</body>
+</html>
