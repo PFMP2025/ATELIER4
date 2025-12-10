@@ -6,6 +6,7 @@
     <title>Jeu de l'Oie de la Prévention</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        /* Global Styles */
         * {
             margin: 0;
             padding: 0;
@@ -104,8 +105,7 @@
        .hero-bg {
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, hsl(180, 70%, 50%, 0.92), hsl(155, 65%, 50%, 0.92)),
-                        url('logo.png') center/cover;
+            background: linear-gradient(135deg, hsl(180, 70%, 50%, 0.92), hsl(155, 65%, 50%, 0.92));
         }
 
         .hero-gradient-bottom {
@@ -625,6 +625,7 @@
             font-size: 0.75rem;
             transition: all 0.3s;
             position: relative;
+            background-color: white;
         }
 
         .space:hover {
@@ -644,9 +645,9 @@
             box-shadow: 0 4px 16px -4px rgba(76, 175, 80, 0.25);
         }
 
-        .space.scenario {
-            background: linear-gradient(135deg, hsl(340, 70%, 65%, 0.2), hsl(155, 60%, 55%, 0.2));
-            border-color: hsl(340, 70%, 65%, 0.4);
+        .space.question {
+            background: linear-gradient(135deg, hsl(280, 70%, 65%, 0.2), hsl(340, 70%, 65%, 0.2));
+            border-color: hsl(280, 70%, 65%, 0.4);
         }
 
         .players-on-space {
@@ -723,10 +724,6 @@
             background: hsl(210, 20%, 95%);
             border-radius: 1rem;
             font-size: 0.875rem;
-        }
-
-        body.dark-mode .player-position {
-            background: hsl(220, 15%, 20%);
         }
 
         .dice-container {
@@ -893,11 +890,20 @@
             font-size: 0.75rem;
         }
 
-        .scenario-modal .modal {
-            max-width: 500px;
+        /* Question Modal Styles */
+        .question-modal .modal {
+            max-width: 600px;
         }
 
-        .scenario-icon {
+        .question-text {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            text-align: center;
+            margin: 1.5rem 0;
+            font-weight: 500;
+        }
+
+        .question-icon {
             width: 4rem;
             height: 4rem;
             border-radius: 50%;
@@ -906,42 +912,108 @@
             justify-content: center;
             margin: 0 auto 1rem;
             font-size: 2rem;
+            background: linear-gradient(135deg, hsl(280, 70%, 65%, 0.2), hsl(340, 70%, 65%, 0.2));
+            color: hsl(280, 70%, 65%);
         }
 
-        .scenario-badge {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            border-radius: 1rem;
-            color: white;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-top: 0.5rem;
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
         }
 
-        .scenario-text {
-            font-size: 1.125rem;
-            line-height: 1.8;
-            text-align: center;
+        .choice-btn {
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            font-size: 1rem;
+            font-family: inherit;
+            position: relative;
+        }
+
+        .choice-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .choice-btn.selected {
+            border-color: var(--primary);
+            background: hsl(180, 65%, 45%, 0.1);
+        }
+
+        .choice-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .choice-btn.correct {
+            border-color: hsl(145, 70%, 50%);
+            background: hsl(145, 70%, 50%, 0.1);
+        }
+
+        .choice-btn.incorrect {
+            border-color: hsl(0, 70%, 60%);
+            background: hsl(0, 70%, 60%, 0.1);
+        }
+
+        .feedback-box {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
             margin: 1.5rem 0;
+            display: none;
         }
 
-        .scenario-effect {
-            padding: 1rem;
-            border-radius: 0.5rem;
+        .feedback-box.show {
+            display: block;
+        }
+
+        .feedback-box.correct {
+            background: hsl(145, 70%, 50%, 0.1);
+            border: 2px solid hsl(145, 70%, 50%);
+            color: hsl(145, 70%, 30%);
+        }
+
+        .feedback-box.incorrect {
+            background: hsl(0, 70%, 60%, 0.1);
+            border: 2px solid hsl(0, 70%, 60%);
+            color: hsl(0, 70%, 40%);
+        }
+
+        body.dark-mode .feedback-box.correct {
+            color: hsl(145, 70%, 70%);
+        }
+
+        body.dark-mode .feedback-box.incorrect {
+            color: hsl(0, 70%, 70%);
+        }
+
+        .feedback-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
+            gap: 0.5rem;
         }
 
-        .scenario-effect-icon {
-            font-size: 1.5rem;
+        .feedback-text {
+            font-size: 1rem;
+            line-height: 1.6;
         }
 
-        .scenario-effect-text {
+        .effect-indicator {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 0.5rem;
             font-weight: 600;
-            font-size: 1.125rem;
+            text-align: center;
         }
 
         .footer {
@@ -1064,6 +1136,7 @@
             flex-shrink: 0;
         }
 
+        /* Responsive adjustments */
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
@@ -1150,7 +1223,7 @@
                             <span style="color: hsl(155, 60%, 55%);">🏆</span>
                         </div>
                         <h3>Apprentissage ludique</h3>
-                        <p>Apprenez en vous amusant avec des scénarios réels</p>
+                        <p>Apprenez en vous amusant avec des questions interactives</p>
                     </div>
                     <div class="card">
                         <div class="card-icon" style="background-color: hsl(0, 70%, 60%, 0.2);">
@@ -1170,8 +1243,8 @@
                         <div class="card-icon" style="background-color: hsl(35, 90%, 55%, 0.2);">
                             <span style="color: hsl(35, 90%, 55%);">💬</span>
                         </div>
-                        <h3>Dialogue ouvert</h3>
-                        <p>Encouragez la communication et les questions</p>
+                        <h3>Questions éducatives</h3>
+                        <p>Testez vos connaissances et apprenez en jouant</p>
                     </div>
                 </div>
             </div>
@@ -1197,8 +1270,8 @@
                     </div>
                     <div class="step">
                         <div class="step-number">03</div>
-                        <h3>Apprenez en jouant</h3>
-                        <p>Répondez aux questions et vivez des scénarios de prévention</p>
+                        <h3>Répondez aux questions</h3>
+                        <p>Testez vos connaissances en santé sexuelle et gagnez des cases</p>
                     </div>
                 </div>
             </div>
@@ -1218,7 +1291,7 @@
 
         
         <footer class="footer">
-            <p>Jeu de l'Oie de la Prévention - Outil éducatif pour la santé sexuelle • Version 2.0</p>
+            <p>Jeu de l'Oie de la Prévention - Outil éducatif pour la santé sexuelle • Version 3.0</p>
         </footer>
     </div>
 
@@ -1317,22 +1390,26 @@
     </div>
 
     
-    <div id="scenarioModal" class="modal-overlay scenario-modal hidden">
+    <div id="questionModal" class="modal-overlay question-modal hidden">
         <div class="modal">
             <div class="modal-header">
-                <div class="scenario-icon" id="scenarioIcon"></div>
-                <h2 id="scenarioPlayerName"></h2>
-                <span class="scenario-badge" id="scenarioBadge"></span>
+                <div class="question-icon">❓</div>
+                <h2 id="questionPlayerName"></h2>
+                <p>Question sur la santé sexuelle</p>
             </div>
 
-            <p class="scenario-text" id="scenarioText"></p>
+            <p class="question-text" id="questionText"></p>
 
-            <div class="scenario-effect" id="scenarioEffect">
-                <span class="scenario-effect-icon" id="scenarioEffectIcon"></span>
-                <span class="scenario-effect-text" id="scenarioEffectText"></span>
+            <div class="choices-container" id="choicesContainer"></div>
+
+            <div class="feedback-box" id="feedbackBox">
+                <div class="feedback-title" id="feedbackTitle"></div>
+                <div class="feedback-text" id="feedbackText"></div>
+                <div class="effect-indicator" id="effectIndicator"></div>
             </div>
 
-            <button class="btn btn-primary" style="width: 100%;" onclick="closeScenarioModal()">Continuer</button>
+            <button class="btn btn-primary" style="width: 100%;" id="validateBtn" onclick="validateAnswer()">Valider ma réponse</button>
+            <button class="btn btn-primary hidden" style="width: 100%;" id="continueBtn" onclick="closeQuestionModal()">Continuer</button>
         </div>
     </div>
 
@@ -1360,8 +1437,8 @@
                 <div class="tutorial-step">
                     <div class="tutorial-step-number">3</div>
                     <div>
-                        <strong>Découvrez les scénarios</strong>
-                        <p style="margin: 0; font-size: 0.875rem; color: hsl(220, 10%, 50%);">Les cases colorées contiennent des situations éducatives qui vous font avancer ou reculer</p>
+                        <strong>Répondez aux questions</strong>
+                        <p style="margin: 0; font-size: 0.875rem; color: hsl(220, 10%, 50%);">Les cases colorées contiennent des questions sur la santé sexuelle. Bonne réponse = avancez, mauvaise réponse = reculez</p>
                     </div>
                 </div>
                 <div class="tutorial-step">
@@ -1381,7 +1458,7 @@
     </div>
 
     <script>
-        
+        // Game state object
         let gameState = {
             mode: 'local',
             playerCount: 2,
@@ -1389,16 +1466,15 @@
             currentPlayerIndex: 0,
             diceValue: null,
             isRolling: false,
-            currentScenario: null,
+            currentQuestion: null,
+            selectedChoice: null,
             turnCount: 0,
             history: [],
             soundEnabled: true
         };
 
-        
         const avatars = ['😊', '🎓', '🌟', '🎨', '🚀', '🎭', '🎪', '🎯', '🎸', '⚡', '🌈', '🔥'];
 
-        
         const playerColors = [
             'hsl(180, 65%, 45%)',
             'hsl(340, 70%, 65%)',
@@ -1407,41 +1483,194 @@
             'hsl(280, 65%, 60%)'
         ];
 
-        
-        const scenarios = [
-            { position: 3, text: "Tu oublies d'utiliser un préservatif lors d'un rapport. C'est un comportement à risque important pour les IST.", type: 'negative', effect: { action: 'backward', value: -3 } },
-            { position: 6, text: "Tu décides de faire un dépistage des IST. C'est une démarche responsable et importante pour ta santé !", type: 'positive', effect: { action: 'forward', value: 2 } },
-            { position: 9, text: "Tu communiques clairement tes limites et ton consentement à ton/ta partenaire. Excellent réflexe !", type: 'positive', effect: { action: 'again', value: 0 } },
-            { position: 12, text: "Tu cherches des informations sur la santé sexuelle sur un site fiable comme celui de Santé Publique France.", type: 'positive', effect: { action: 'forward', value: 1 } },
-            { position: 15, text: "Tu ignores des symptômes inquiétants au lieu de consulter un médecin. Il est important de ne pas attendre.", type: 'negative', effect: { action: 'skip', value: 0 } },
-            { position: 18, text: "Tu parles ouvertement de contraception avec ton/ta partenaire. La communication est essentielle !", type: 'positive', effect: { action: 'forward', value: 2 } },
-            { position: 21, text: "Tu cèdes à la pression de ton groupe d'amis concernant ta vie intime. Respecte toujours tes propres choix.", type: 'negative', effect: { action: 'backward', value: -2 } },
-            { position: 24, text: "Tu découvres l'existence de la PrEP (prophylaxie pré-exposition) pour la prévention du VIH. Bonne information !", type: 'neutral', effect: { action: 'forward', value: 1 } },
-            { position: 27, text: "Tu refuses un rapport sexuel car tu ne te sens pas prêt(e). Respecter son propre rythme est fondamental.", type: 'positive', effect: { action: 'forward', value: 3 } },
-            { position: 30, text: "Tu te renseignes sur les différentes méthodes de contraception disponibles. C'est important de connaître ses options.", type: 'positive', effect: { action: 'forward', value: 2 } },
-            { position: 33, text: "Tu partages des informations intimes sur les réseaux sociaux. Attention à protéger ta vie privée.", type: 'negative', effect: { action: 'backward', value: -2 } },
-            { position: 36, text: "Tu accompagnes un(e) ami(e) à un rendez-vous de dépistage. Le soutien entre pairs est précieux !", type: 'positive', effect: { action: 'forward', value: 2 } },
-            { position: 39, text: "Tu te rends à un rendez-vous chez un professionnel de santé pour parler de contraception. Démarche exemplaire !", type: 'positive', effect: { action: 'forward', value: 1 } },
-            { position: 5, text: "Tu poses des questions sur le consentement lors d'un cours d'éducation sexuelle. Bravo pour ta curiosité !", type: 'positive', effect: { action: 'forward', value: 1 } },
-            { position: 8, text: "Tu ne respectes pas le consentement de ton/ta partenaire. Le consentement est TOUJOURS obligatoire.", type: 'negative', effect: { action: 'backward', value: -4 } },
-            { position: 11, text: "Tu découvres les différents moyens de contraception d'urgence. Information utile en cas de besoin !", type: 'neutral', effect: { action: 'forward', value: 1 } },
-            { position: 14, text: "Tu te vaccines contre le papillomavirus (HPV). Un geste de prévention important !", type: 'positive', effect: { action: 'forward', value: 2 } },
-            { position: 17, text: "Tu consultes immédiatement après un rapport à risque. Rapidité d'action = meilleure prévention !", type: 'positive', effect: { action: 'again', value: 0 } },
-            { position: 20, text: "Tu as peur du jugement et tu ne consultes pas. N'hésite jamais à parler à un professionnel de santé.", type: 'negative', effect: { action: 'backward', value: -1 } },
-            { position: 23, text: "Tu participes à un atelier sur les relations saines. Excellente initiative pour ton développement !", type: 'positive', effect: { action: 'forward', value: 2 } },
-            { position: 26, text: "Tu apprends à reconnaître les signes d'une relation toxique. Cette connaissance peut t'aider et aider les autres.", type: 'positive', effect: { action: 'forward', value: 1 } },
-            { position: 29, text: "Tu partages des ressources fiables sur la santé sexuelle avec tes amis. Diffuser la bonne information, c'est important !", type: 'positive', effect: { action: 'forward', value: 2 } },
-            { position: 32, text: "Tu te renseignes sur les services de santé sexuelle gratuits et confidentiels pour les jeunes.", type: 'positive', effect: { action: 'forward', value: 1 } },
-            { position: 35, text: "Tu encourages un(e) ami(e) à parler de ses préoccupations avec un adulte de confiance. Bon soutien !", type: 'positive', effect: { action: 'forward', value: 1 } }
+        // Questions sur la santé sexuelle pour les cases spécifiées
+        const questions = [
+            {
+                position: 3,
+                question: "Quelle est la méthode de contraception la plus efficace pour se protéger à la fois contre les grossesses non désirées ET les IST ?",
+                choices: [
+                    "La pilule contraceptive",
+                    "Le préservatif (masculin ou féminin)",
+                    "Le stérilet (DIU)",
+                    "L'implant contraceptif"
+                ],
+                correctAnswer: 1,
+                feedback: "Le préservatif est la SEULE méthode de contraception qui protège à la fois contre les grossesses non désirées ET les infections sexuellement transmissibles (IST). Les autres méthodes sont efficaces contre les grossesses mais ne protègent pas des IST.",
+                correctEffect: { action: 'forward', value: 2 },
+                incorrectEffect: { action: 'backward', value: 1 }
+            },
+            {
+                position: 6,
+                question: "À quelle fréquence est-il recommandé de faire un dépistage complet des IST lorsqu'on a une vie sexuelle active avec plusieurs partenaires ?",
+                choices: [
+                    "Une fois par an",
+                    "Tous les 3 à 6 mois",
+                    "Seulement en cas de symptômes",
+                    "Une fois dans sa vie suffit"
+                ],
+                correctAnswer: 1,
+                feedback: "Il est recommandé de faire un dépistage complet des IST tous les 3 à 6 mois lorsqu'on a plusieurs partenaires. Beaucoup d'IST sont asymptomatiques, donc attendre les symptômes n'est pas suffisant. Un dépistage régulier permet une détection et un traitement précoces.",
+                correctEffect: { action: 'forward', value: 3 },
+                incorrectEffect: { action: 'backward', value: 1 }
+            },
+            {
+                position: 12,
+                question: "Le consentement dans une relation sexuelle, c'est :",
+                choices: [
+                    "Dire oui une fois pour toutes les fois suivantes",
+                    "Un accord libre, éclairé et donné à chaque fois",
+                    "Accepter parce qu'on est en couple",
+                    "Ne pas dire non clairement"
+                ],
+                correctAnswer: 1,
+                feedback: "Le consentement doit être libre (sans pression), éclairé (en connaissance de cause) et donné à CHAQUE fois. On peut dire non à tout moment, même si on a déjà dit oui avant ou si on est en couple. L'absence de refus ne signifie pas un consentement.",
+                correctEffect: { action: 'forward', value: 2 },
+                incorrectEffect: { action: 'backward', value: 2 }
+            },
+            {
+                position: 15,
+                question: "Qu'est-ce que la PrEP (prophylaxie pré-exposition) ?",
+                choices: [
+                    "Un traitement après une exposition au VIH",
+                    "Un médicament préventif pris AVANT une exposition au VIH",
+                    "Un type de préservatif spécial",
+                    "Un test de dépistage du VIH"
+                ],
+                correctAnswer: 1,
+                feedback: "La PrEP est un traitement préventif que prennent les personnes séronégatives AVANT une exposition potentielle au VIH. Pris correctement, il réduit de plus de 99% le risque de transmission du VIH. C'est un outil de prévention complémentaire au préservatif.",
+                correctEffect: { action: 'forward', value: 2 },
+                incorrectEffect: { action: 'backward', value: 1 }
+            },
+            {
+                position: 18,
+                question: "Combien de temps après un rapport à risque peut-on prendre un traitement d'urgence (TPE) pour prévenir une infection au VIH ?",
+                choices: [
+                    "Dans les 4 heures",
+                    "Dans les 24 heures",
+                    "Dans les 48 à 72 heures",
+                    "Dans la semaine"
+                ],
+                correctAnswer: 2,
+                feedback: "Le traitement post-exposition (TPE) doit être pris le plus rapidement possible, idéalement dans les 4 heures, mais peut être efficace jusqu'à 48-72 heures après l'exposition. Plus tôt il est pris, plus il est efficace. Consultez les urgences immédiatement après un rapport à risque.",
+                correctEffect: { action: 'forward', value: 3 },
+                incorrectEffect: { action: 'backward', value: 1 }
+            },
+            {
+                position: 21,
+                question: "La vaccination contre le papillomavirus (HPV) est recommandée pour :",
+                choices: [
+                    "Uniquement les filles",
+                    "Uniquement les garçons",
+                    "Les filles ET les garçons",
+                    "Seulement les personnes déjà sexuellement actives"
+                ],
+                correctAnswer: 2,
+                feedback: "La vaccination HPV est recommandée pour TOUS les jeunes (filles et garçons) entre 11 et 14 ans, idéalement AVANT le début de la vie sexuelle. Le HPV peut causer des cancers (col de l'utérus, gorge, anus) chez les hommes ET les femmes. La vaccination protège tout le monde.",
+                correctEffect: { action: 'forward', value: 2 },
+                incorrectEffect: { action: 'backward', value: 1 }
+            },
+            {
+                position: 24,
+                question: "Si un préservatif se déchire pendant un rapport, quelle est la première chose à faire ?",
+                choices: [
+                    "Attendre quelques jours pour voir s'il y a des symptômes",
+                    "Prendre une contraception d'urgence ET envisager un TPE si risque VIH",
+                    "Ne rien faire si on prend la pilule",
+                    "Faire un test de grossesse le lendemain"
+                ],
+                correctAnswer: 1,
+                feedback: "En cas de rupture de préservatif : 1) Contraception d'urgence dans les 3-5 jours pour éviter une grossesse. 2) Consulter rapidement (urgences) pour évaluer le risque VIH et obtenir un TPE si nécessaire (efficace jusqu'à 48-72h). 3) Faire un dépistage IST 3 mois après. Agir vite est crucial !",
+                correctEffect: { action: 'forward', value: 3 },
+                incorrectEffect: { action: 'backward', value: 2 }
+            },
+            {
+                position: 27,
+                question: "Où peut-on obtenir une contraception d'urgence (pilule du lendemain) ?",
+                choices: [
+                    "Uniquement chez le médecin avec ordonnance",
+                    "En pharmacie sans ordonnance, gratuitement pour les mineurs",
+                    "Seulement à l'hôpital",
+                    "Il faut l'accord des parents pour les mineurs"
+                ],
+                correctAnswer: 1,
+                feedback: "La contraception d'urgence est disponible en pharmacie SANS ordonnance et GRATUITEMENT pour les mineurs (anonymat garanti). Elle est aussi disponible dans les infirmeries scolaires, les centres de planning familial et chez les médecins. Plus elle est prise tôt après le rapport, plus elle est efficace.",
+                correctEffect: { action: 'forward', value: 2 },
+                incorrectEffect: { action: 'backward', value: 1 }
+            },
+            {
+                position: 30,
+                question: "Quelle IST peut être asymptomatique mais causer la stérilité si elle n'est pas traitée ?",
+                choices: [
+                    "L'herpès génital",
+                    "La chlamydia",
+                    "Les verrues génitales (HPV)",
+                    "La syphilis"
+                ],
+                correctAnswer: 1,
+                feedback: "La chlamydia est souvent silencieuse (70% des femmes et 50% des hommes infectés n'ont pas de symptômes) mais peut causer de graves complications comme la stérilité si elle n'est pas traitée. C'est l'IST bactérienne la plus fréquente. D'où l'importance du dépistage régulier !",
+                correctEffect: { action: 'forward', value: 2 },
+                incorrectEffect: { action: 'backward', value: 1 }
+            },
+            {
+                position: 33,
+                question: "Le VIH (virus du SIDA) peut se transmettre par :",
+                choices: [
+                    "Les baisers, la salive et les toilettes publiques",
+                    "Le sang, le sperme, les sécrétions vaginales et le lait maternel",
+                    "La transpiration et les larmes",
+                    "Les piqûres de moustiques"
+                ],
+                correctAnswer: 1,
+                feedback: "Le VIH se transmet UNIQUEMENT par : le sang, le sperme, les sécrétions vaginales et le lait maternel. Il ne se transmet PAS par la salive, les larmes, la transpiration, les piqûres d'insectes, les toilettes, les embrassades ou le partage de vaisselle. La connaissance des modes de transmission aide à se protéger correctement.",
+                correctEffect: { action: 'forward', value: 3 },
+                incorrectEffect: { action: 'backward', value: 2 }
+            },
+            {
+                position: 36,
+                question: "Si on a eu un rapport sexuel non protégé, combien de temps faut-il attendre avant de faire un test VIH fiable ?",
+                choices: [
+                    "Le lendemain",
+                    "1 semaine",
+                    "6 semaines (test recommandé à 6 semaines et confirmé à 3 mois)",
+                    "1 an"
+                ],
+                correctAnswer: 2,
+                feedback: "La période fenêtre (temps entre la contamination et la détectabilité) pour le VIH est d'environ 6 semaines pour les tests de 4e génération (les plus courants). Un test à 6 semaines est fiable à 95-99%, et un test à 3 mois confirme définitivement le résultat. Ne pas attendre les symptômes : dépistez-vous !",
+                correctEffect: { action: 'forward', value: 2 },
+                incorrectEffect: { action: 'backward', value: 1 }
+            },
+            {
+                position: 39,
+                question: "Parmi ces situations, laquelle nécessite l'utilisation d'un lubrifiant à base d'eau avec un préservatif ?",
+                choices: [
+                    "Toutes les situations pour plus de confort",
+                    "Uniquement en cas de sécheresse vaginale",
+                    "Les lubrifiants ne sont jamais nécessaires",
+                    "Seulement pour les rapports anaux"
+                ],
+                correctAnswer: 0,
+                feedback: "L'utilisation d'un lubrifiant à BASE D'EAU (compatible avec les préservatifs) est recommandée pour TOUS les rapports avec préservatif : cela augmente le confort, réduit les risques de déchirure du préservatif et améliore le plaisir. ATTENTION : Ne jamais utiliser de lubrifiants à base d'huile (huile de massage, vaseline) car ils dégradent le latex !",
+                correctEffect: { action: 'forward', value: 2 },
+                incorrectEffect: { action: 'backward', value: 1 }
+            }
         ];
 
-        
+        // --- Initialization ---
         window.addEventListener('DOMContentLoaded', () => {
             loadSettings();
             checkFirstVisit();
+            
+            const saved = loadGame();
+            if (saved && confirm('Une partie sauvegardée a été trouvée. Voulez-vous la reprendre ?')) {
+                gameState = saved;
+                document.getElementById('homePage').classList.add('hidden');
+                document.getElementById('gamePage').classList.remove('hidden');
+                createBoard();
+                updateUI();
+            }
         });
 
-        
+        // --- Theme and Sound Toggles ---
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
             const icon = document.getElementById('themeIcon');
@@ -1450,7 +1679,6 @@
             playSound('click');
         }
 
-        
         function toggleSound() {
             gameState.soundEnabled = !gameState.soundEnabled;
             const icon = document.getElementById('soundIcon');
@@ -1461,7 +1689,6 @@
             if (gameState.soundEnabled) playSound('click');
         }
 
-        
         function loadSettings() {
             const theme = localStorage.getItem('theme');
             if (theme === 'dark') {
@@ -1477,31 +1704,27 @@
             }
         }
 
-        
         function checkFirstVisit() {
             const hasVisited = localStorage.getItem('hasVisited');
-            const dontShow = localStorage.getItem('dontShowTutorial');
-            if (!hasVisited && !dontShow) {
-                
-                localStorage.setItem('hasVisited', 'true');
-            }
+            const dontShowTutorial = localStorage.getItem('dontShowTutorial');
         }
 
-        
+        // --- Tutorial ---
         function showTutorial() {
             document.getElementById('tutorialModal').classList.remove('hidden');
+            playSound('click');
         }
 
         function closeTutorial() {
-            const dontShow = document.getElementById('dontShowAgain').checked;
-            if (dontShow) {
+            const dontShowCheckbox = document.getElementById('dontShowAgain');
+            if (dontShowCheckbox && dontShowCheckbox.checked) {
                 localStorage.setItem('dontShowTutorial', 'true');
             }
             document.getElementById('tutorialModal').classList.add('hidden');
             playSound('click');
         }
 
-        
+        // --- Sound Effects ---
         function playSound(type) {
             if (!gameState.soundEnabled) return;
             
@@ -1551,7 +1774,7 @@
             }
         }
 
-        
+        // --- Confetti Animation ---
         function createConfetti() {
             const colors = ['hsl(180, 65%, 45%)', 'hsl(340, 70%, 65%)', 'hsl(155, 60%, 55%)', 'hsl(35, 90%, 55%)'];
             for (let i = 0; i < 50; i++) {
@@ -1568,19 +1791,19 @@
             }
         }
 
-        
+        // --- Board Creation ---
         function createBoard() {
             const board = document.getElementById('gameBoard');
             board.innerHTML = '';
             
             for (let i = 0; i <= 40; i++) {
                 const space = document.createElement('div');
-                const isScenario = scenarios.some(s => s.position === i);
+                const hasQuestion = questions.some(q => q.position === i);
                 
                 space.className = 'space';
                 if (i === 0) space.classList.add('start');
                 else if (i === 40) space.classList.add('finish');
-                else if (isScenario) space.classList.add('scenario');
+                else if (hasQuestion) space.classList.add('question');
                 
                 space.innerHTML = `
                     <span>${i === 0 ? 'Départ' : i === 40 ? 'Arrivée' : i}</span>
@@ -1591,7 +1814,7 @@
             }
         }
 
-        
+        // --- Modal Functions (Setup) ---
         function openSetupModal() {
             document.getElementById('setupModal').classList.remove('hidden');
             updatePlayerCustomization();
@@ -1676,24 +1899,23 @@
         function goHome() {
             document.getElementById('gamePage').classList.add('hidden');
             document.getElementById('homePage').classList.remove('hidden');
-            saveGame(null); // Clear saved game
+            saveGame(null);
             playSound('click');
         }
 
-        // Start game
+        // --- Game Start ---
         function startGame() {
             closeSetupModal();
             
-            // Initialize players with custom names and avatars
             gameState.players = [];
             for (let i = 0; i < gameState.playerCount; i++) {
                 const nameInput = document.getElementById(`playerName${i}`);
-                const selectedAvatar = document.querySelector(`#avatarSelector${i} .avatar-option.selected`);
+                const selectedAvatarElement = document.querySelector(`#avatarSelector${i} .avatar-option.selected`);
                 
                 gameState.players.push({
                     id: i + 1,
                     name: nameInput ? nameInput.value : `Joueur ${i + 1}`,
-                    avatar: selectedAvatar ? selectedAvatar.textContent : avatars[i % avatars.length],
+                    avatar: selectedAvatarElement ? selectedAvatarElement.textContent : avatars[i % avatars.length],
                     position: 0,
                     color: playerColors[i]
                 });
@@ -1704,11 +1926,9 @@
             gameState.turnCount = 0;
             gameState.history = [];
             
-            // Show game page
             document.getElementById('homePage').classList.add('hidden');
             document.getElementById('gamePage').classList.remove('hidden');
             
-            // Create board
             createBoard();
             updateUI();
             addHistory('🎮 La partie commence !', 'hsl(180, 65%, 45%)');
@@ -1716,17 +1936,18 @@
             playSound('positive');
         }
 
-        // Add to history
+        // --- History Management ---
         function addHistory(text, color = 'hsl(220, 10%, 50%)') {
-            gameState.history.unshift({ text, color, time: new Date() });
+            const timestamp = new Date();
+            gameState.history.unshift({ text, color, time: timestamp });
             if (gameState.history.length > 10) gameState.history.pop();
             
-            const historyList = document.getElementById('historyList');
-            if (historyList) {
-                historyList.innerHTML = gameState.history.map(item => `
+            const historyListElement = document.getElementById('historyList');
+            if (historyListElement) {
+                historyListElement.innerHTML = gameState.history.map(item => `
                     <div class="history-item">
                         <div class="history-icon" style="background-color: ${item.color}20; color: ${item.color}">
-                            ${item.text.charAt(0)}
+                            ${item.text.charAt(0).toUpperCase()}
                         </div>
                         <div>${item.text}</div>
                     </div>
@@ -1734,23 +1955,20 @@
             }
         }
 
-        // Update UI
+        // --- UI Update ---
         function updateUI() {
             const currentPlayer = gameState.players[gameState.currentPlayerIndex];
             
-            // Update current player card
             document.getElementById('currentPlayerCard').style.borderColor = currentPlayer.color;
             document.getElementById('currentPlayerAvatar').style.backgroundColor = currentPlayer.color;
             document.getElementById('currentPlayerAvatar').textContent = currentPlayer.avatar;
             document.getElementById('currentPlayerName').textContent = currentPlayer.name;
             document.getElementById('currentPlayerPosition').textContent = `Case ${currentPlayer.position}`;
             
-            // Update turn count
             document.getElementById('turnCount').textContent = `Tour ${gameState.turnCount}`;
             
-            // Update players list
-            const playersList = document.getElementById('playersList');
-            playersList.innerHTML = '';
+            const playersListElement = document.getElementById('playersList');
+            playersListElement.innerHTML = '';
             gameState.players.forEach((player, index) => {
                 const isActive = index === gameState.currentPlayerIndex;
                 const playerItem = document.createElement('div');
@@ -1764,10 +1982,9 @@
                         <span class="player-item-position">Case ${player.position}</span>
                     </div>
                 `;
-                playersList.appendChild(playerItem);
+                playersListElement.appendChild(playerItem);
             });
             
-            // Update player tokens on board
             for (let i = 0; i <= 40; i++) {
                 const spaceEl = document.getElementById(`space-${i}`);
                 if (spaceEl) {
@@ -1784,8 +2001,7 @@
                 }
             }
             
-            // Update dice
-            if (gameState.diceValue) {
+            if (gameState.diceValue !== null) {
                 document.getElementById('diceValue').textContent = gameState.diceValue;
             } else {
                 document.getElementById('diceValue').textContent = '';
@@ -1794,14 +2010,14 @@
             saveGame();
         }
 
-        // Roll dice
+        // --- Dice Rolling ---
         function rollDice() {
             if (gameState.isRolling) return;
             
             gameState.isRolling = true;
-            const button = document.getElementById('diceButton');
-            button.disabled = true;
-            button.classList.add('rolling');
+            const diceButton = document.getElementById('diceButton');
+            diceButton.disabled = true;
+            diceButton.classList.add('rolling');
             document.getElementById('diceText').textContent = 'Lancement...';
             
             playSound('dice');
@@ -1817,7 +2033,7 @@
                     const finalValue = Math.floor(Math.random() * 6) + 1;
                     gameState.diceValue = finalValue;
                     document.getElementById('diceValue').textContent = finalValue;
-                    button.classList.remove('rolling');
+                    diceButton.classList.remove('rolling');
                     
                     const currentPlayer = gameState.players[gameState.currentPlayerIndex];
                     addHistory(`🎲 ${currentPlayer.name} a lancé un ${finalValue}`, currentPlayer.color);
@@ -1831,13 +2047,12 @@
             }, 100);
         }
 
-        // Move player with animation
+        // --- Player Movement ---
         function movePlayer(steps) {
             const currentPlayer = gameState.players[gameState.currentPlayerIndex];
             const oldPosition = currentPlayer.position;
             const newPosition = Math.min(currentPlayer.position + steps, 40);
             
-            // Animate movement
             let currentPos = oldPosition;
             const moveInterval = setInterval(() => {
                 if (currentPos < newPosition) {
@@ -1846,7 +2061,6 @@
                     updateUI();
                     playSound('move');
                     
-                    // Add moving class
                     const spaceEl = document.getElementById(`space-${currentPos}`);
                     if (spaceEl) {
                         const tokens = spaceEl.querySelectorAll('.player-token');
@@ -1862,15 +2076,13 @@
                     
                     addHistory(`↗️ ${currentPlayer.name} avance à la case ${newPosition}`, currentPlayer.color);
                     
-                    // Check for scenario
-                    const scenario = scenarios.find(s => s.position === newPosition);
-                    if (scenario) {
-                        setTimeout(() => showScenario(scenario), 500);
+                    const question = questions.find(q => q.position === newPosition);
+                    if (question) {
+                        setTimeout(() => showQuestion(question), 500);
                     } else {
                         setTimeout(nextPlayer, 1000);
                     }
                     
-                    // Check for win
                     if (newPosition >= 40) {
                         setTimeout(() => {
                             playSound('positive');
@@ -1883,97 +2095,123 @@
             }, 300);
         }
 
-        // Show scenario
-        function showScenario(scenario) {
-            gameState.currentScenario = scenario;
+        // --- Question Display ---
+        function showQuestion(question) {
+            gameState.currentQuestion = question;
+            gameState.selectedChoice = null;
             const currentPlayer = gameState.players[gameState.currentPlayerIndex];
             
-            const typeColors = {
-                positive: 'hsl(145, 70%, 50%)',
-                negative: 'hsl(0, 70%, 60%)',
-                neutral: 'hsl(35, 90%, 55%)'
-            };
+            document.getElementById('questionPlayerName').textContent = currentPlayer.name;
+            document.getElementById('questionText').textContent = question.question;
             
-            const typeLabels = {
-                positive: 'Bonne décision',
-                negative: 'Attention',
-                neutral: 'Information'
-            };
+            const choicesContainer = document.getElementById('choicesContainer');
+            choicesContainer.innerHTML = '';
             
-            const typeIcons = {
-                positive: '❤️',
-                negative: '⚠️',
-                neutral: '🛡️'
-            };
+            question.choices.forEach((choice, index) => {
+                const choiceBtn = document.createElement('button');
+                choiceBtn.className = 'choice-btn';
+                choiceBtn.textContent = choice;
+                choiceBtn.onclick = () => selectChoice(index);
+                choicesContainer.appendChild(choiceBtn);
+            });
             
-            const effectIcons = {
-                forward: '📈',
-                backward: '📉',
-                again: '🔄',
-                skip: '⛔'
-            };
+            document.getElementById('feedbackBox').classList.remove('show', 'correct', 'incorrect');
+            document.getElementById('validateBtn').classList.remove('hidden');
+            document.getElementById('continueBtn').classList.add('hidden');
             
-            const effectTexts = {
-                forward: `Avance de ${scenario.effect.value} case${scenario.effect.value > 1 ? 's' : ''}`,
-                backward: `Recule de ${Math.abs(scenario.effect.value)} case${Math.abs(scenario.effect.value) > 1 ? 's' : ''}`,
-                again: 'Lance le dé à nouveau',
-                skip: 'Passe ton tour'
-            };
+            document.getElementById('questionModal').classList.remove('hidden');
+            playSound('click');
             
-            const color = typeColors[scenario.type];
-            
-            document.getElementById('scenarioIcon').style.backgroundColor = `${color}20`;
-            document.getElementById('scenarioIcon').textContent = typeIcons[scenario.type];
-            document.getElementById('scenarioPlayerName').textContent = currentPlayer.name;
-            document.getElementById('scenarioBadge').style.backgroundColor = color;
-            document.getElementById('scenarioBadge').textContent = typeLabels[scenario.type];
-            document.getElementById('scenarioText').textContent = scenario.text;
-            document.getElementById('scenarioEffect').style.backgroundColor = `${color}10`;
-            document.getElementById('scenarioEffectIcon').textContent = effectIcons[scenario.effect.action];
-            document.getElementById('scenarioEffectIcon').style.color = color;
-            document.getElementById('scenarioEffectText').textContent = effectTexts[scenario.effect.action];
-            document.getElementById('scenarioEffectText').style.color = color;
-            
-            document.getElementById('scenarioModal').classList.remove('hidden');
-            
-            playSound(scenario.type === 'positive' ? 'positive' : 'negative');
-            
-            addHistory(`📋 ${currentPlayer.name}: ${typeLabels[scenario.type]}`, color);
+            addHistory(`❓ ${currentPlayer.name}: Question sur la santé sexuelle`, 'hsl(280, 70%, 65%)');
         }
 
-        // Close scenario modal
-        function closeScenarioModal() {
-            const scenario = gameState.currentScenario;
-            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+        // --- Choice Selection ---
+        function selectChoice(index) {
+            gameState.selectedChoice = index;
             
-            if (scenario.effect.action === 'forward' || scenario.effect.action === 'backward') {
-                const oldPos = currentPlayer.position;
-                const newPosition = Math.max(0, Math.min(currentPlayer.position + scenario.effect.value, 40));
-                currentPlayer.position = newPosition;
-                
-                if (scenario.effect.value > 0) {
-                    addHistory(`↗️ ${currentPlayer.name} avance de ${scenario.effect.value} cases`, currentPlayer.color);
-                } else {
-                    addHistory(`↙️ ${currentPlayer.name} recule de ${Math.abs(scenario.effect.value)} cases`, currentPlayer.color);
+            const choiceBtns = document.querySelectorAll('.choice-btn');
+            choiceBtns.forEach((btn, i) => {
+                btn.classList.remove('selected');
+                if (i === index) {
+                    btn.classList.add('selected');
                 }
-                
+            });
+            
+            playSound('click');
+        }
+
+        // --- Answer Validation ---
+        function validateAnswer() {
+            if (gameState.selectedChoice === null) {
+                alert('Veuillez sélectionner une réponse avant de valider.');
+                return;
+            }
+            
+            const question = gameState.currentQuestion;
+            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            const isCorrect = gameState.selectedChoice === question.correctAnswer;
+            
+            const choiceBtns = document.querySelectorAll('.choice-btn');
+            choiceBtns.forEach((btn, i) => {
+                btn.disabled = true;
+                if (i === question.correctAnswer) {
+                    btn.classList.add('correct');
+                } else if (i === gameState.selectedChoice && !isCorrect) {
+                    btn.classList.add('incorrect');
+                }
+            });
+            
+            const feedbackBox = document.getElementById('feedbackBox');
+            const feedbackTitle = document.getElementById('feedbackTitle');
+            const feedbackText = document.getElementById('feedbackText');
+            const effectIndicator = document.getElementById('effectIndicator');
+            
+            feedbackBox.classList.add('show');
+            
+            if (isCorrect) {
+                feedbackBox.classList.add('correct');
+                feedbackTitle.innerHTML = '✅ Bonne réponse !';
+                feedbackText.textContent = question.feedback;
+                effectIndicator.textContent = `Tu avances de ${question.correctEffect.value} case${question.correctEffect.value > 1 ? 's' : ''} !`;
+                playSound('positive');
+                addHistory(`✅ ${currentPlayer.name}: Bonne réponse ! +${question.correctEffect.value} cases`, 'hsl(145, 70%, 50%)');
+            } else {
+                feedbackBox.classList.add('incorrect');
+                feedbackTitle.innerHTML = '❌ Mauvaise réponse';
+                feedbackText.textContent = question.feedback;
+                effectIndicator.textContent = `Tu recules de ${Math.abs(question.incorrectEffect.value)} case${Math.abs(question.incorrectEffect.value) > 1 ? 's' : ''}.`;
+                playSound('negative');
+                addHistory(`❌ ${currentPlayer.name}: Mauvaise réponse, -${Math.abs(question.incorrectEffect.value)} case${Math.abs(question.incorrectEffect.value) > 1 ? 's' : ''}`, 'hsl(0, 70%, 60%)');
+            }
+            
+            document.getElementById('validateBtn').classList.add('hidden');
+            document.getElementById('continueBtn').classList.remove('hidden');
+        }
+
+        // --- Question Modal Close ---
+        function closeQuestionModal() {
+            const question = gameState.currentQuestion;
+            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            const isCorrect = gameState.selectedChoice === question.correctAnswer;
+            
+            const effect = isCorrect ? question.correctEffect : question.incorrectEffect;
+            
+            if (effect.action === 'forward' || effect.action === 'backward') {
+                const newPosition = Math.max(0, Math.min(currentPlayer.position + effect.value, 40));
+                currentPlayer.position = newPosition;
                 updateUI();
             }
             
-            document.getElementById('scenarioModal').classList.add('hidden');
-            gameState.currentScenario = null;
+            document.getElementById('questionModal').classList.add('hidden');
+            gameState.currentQuestion = null;
+            gameState.selectedChoice = null;
             
             playSound('click');
             
-            if (scenario.effect.action !== 'again') {
-                setTimeout(nextPlayer, 500);
-            } else {
-                document.getElementById('diceButton').disabled = false;
-                addHistory(`🔄 ${currentPlayer.name} rejoue !`, currentPlayer.color);
-            }
+            setTimeout(nextPlayer, 500);
         }
 
-        // Next player
+        // --- Next Player Logic ---
         function nextPlayer() {
             gameState.currentPlayerIndex = (gameState.currentPlayerIndex + 1) % gameState.players.length;
             
@@ -1987,7 +2225,7 @@
             updateUI();
         }
 
-        // Save/Load game
+        // --- Save/Load Game ---
         function saveGame() {
             if (gameState.players.length > 0) {
                 localStorage.setItem('savedGame', JSON.stringify(gameState));
@@ -2004,22 +2242,11 @@
                     }
                 } catch (e) {
                     console.error('Error loading game:', e);
+                    return null;
                 }
             }
             return null;
         }
-
-        // Check for saved game on load
-        window.addEventListener('DOMContentLoaded', () => {
-            const saved = loadGame();
-            if (saved && confirm('Une partie sauvegardée a été trouvée. Voulez-vous la reprendre ?')) {
-                gameState = saved;
-                document.getElementById('homePage').classList.add('hidden');
-                document.getElementById('gamePage').classList.remove('hidden');
-                createBoard();
-                updateUI();
-            }
-        });
     </script>
 </body>
 </html>
